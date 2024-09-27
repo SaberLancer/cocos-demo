@@ -5,6 +5,7 @@ import { CONTROLLER_ENUM, DIRECTION_ENUM, DIRECTION_ORIGIN_ENUM, ENTITY_STATE_EN
 import EventManager from '../Runtime/EventManager';
 import { PlayerStateMachine } from '../Scripts/Player/PlayerStateMachine';
 import { IENTITY } from '../Levels';
+import { StateMachine } from './StateMachine';
 const { ccclass, property } = _decorator;
 
 const ANIMATION_SPEED = 1 / 8
@@ -13,7 +14,7 @@ const ANIMATION_SPEED = 1 / 8
 export class EntityManager extends Component {
     x: number = 0
     y: number = 0
-    fsm: PlayerStateMachine
+    fsm: StateMachine
 
     private _direction: DIRECTION_ENUM
     private _state: ENTITY_STATE_ENUM

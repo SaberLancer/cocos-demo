@@ -7,6 +7,7 @@ import { TILE_HEIGHT, TILE_WIDTH } from '../Tile/TileManager';
 import EventManager from '../../Runtime/EventManager';
 import { EVENT_ENUM } from '../../Enums';
 import { PlayerManager } from '../Player/PlayerManager';
+import { WoodenSkeletonManager } from '../../WoodenSkeleton/WoodenSkeletonManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('BattleManager')
@@ -40,6 +41,7 @@ export class BattleManager extends Component {
             DataManager.instance.mapColumnCount = level.mapInfo[0].length;
 
             this.generateMap();
+            this.generateEnemies()
             this.generatePlayer()
         }
     }
@@ -59,14 +61,25 @@ export class BattleManager extends Component {
         this.stage.parent = this.node;
     }
 
-    generatePlayer() {
+    async generatePlayer() {
         const player = createUINode();
         player.parent = this.stage;
         const playerManager = player.addComponent(PlayerManager)
-        playerManager.init()
+        await playerManager.init()
+        DataManager.instance.player = playerManager
+        EventManager.instance.emit(EVENT_ENUM.PLAYER_BORN, true)
     }
 
-    generateMap() {
+    async generateEnemies() {
+        const player = createUINode();
+        player.parent = this.stage;
+        const woodenSkeletonManager = player.addComponent(WoodenSkeletonManager)
+        await woodenSkeletonManager.init()
+        DataManager.instance.enemies.push(woodenSkeletonManager)
+
+    }
+
+    async generateMap() {
         const tileMap = createUINode();
         tileMap.parent = this.stage;
         const tileMapManager = tileMap.addComponent(TileMapManager);
