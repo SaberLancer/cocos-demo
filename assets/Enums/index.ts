@@ -1,0 +1,66 @@
+export enum TILE_TYPE_ENUM {
+    WALL_ROW = 'WALL_ROW',
+    WALL_COLUMN = 'WALL_COLUMN',
+    WALL_LEFT_TOP = 'WALL_LEFT_TOP',
+    WALL_RIGHT_TOP = 'WALL_RIGHT_TOP',
+    WALL_LEFT_BOTTOM = 'WALL_LEFT_BOTTOM',
+    WALL_RIGHT_BOTTOM = 'WALL_RIGHT_BOTTOM',
+    CLIFF_LEFT = 'CLIFF_ROW_START',
+    CLIFF_CENTER = 'CLIFF_ROW_CENTER',
+    CLIFF_RIGHT = 'CLIFF_ROW_END',
+    FLOOR = 'FLOOR',
+}
+
+export enum EVENT_ENUM {
+    NEXT_LEVEL = 'NEXT_LEVEL',
+    PLAYER_CTRL = 'PLAYER_CTRL',
+}
+
+export enum CONTROLLER_ENUM {
+    TOP = 'TOP',
+    BOTTOM = 'BOTTOM',
+    LEFT = 'LEFT',
+    RIGHT = 'RIGHT',
+    TURNLEFT = 'TURNLEFT',
+    TURNRIGHT = 'TURNRIGHT'
+}
+
+export enum FSM_PARAM_TYPE_ENUM {
+    TRIGGER = 'TRIGGER',
+    NUMBER = 'NUMBER'
+}
+
+export enum PARAMS_NAME_ENUM {
+    IDLE = 'IDLE',
+    TURNLEFT = 'TURNLEFT',
+    TURNRIGHT = 'TURNRIGHT',
+    DIRECTION = 'DIRECTION'
+}
+
+export enum DIRECTION_ENUM {
+    TOP = 'TOP',
+    BOTTOM = 'BOTTOM',
+    LEFT = 'LEFT',
+    RIGHT = 'RIGHT'
+}
+
+export enum ENTITY_STATE_ENUM {
+    IDLE = 'IDLE',
+    TURNLEFT = 'TURNLEFT'
+}
+
+export enum DIRECTION_ORIGIN_ENUM {
+    TOP = 0,
+    BOTTOM = 1,
+    LEFT = 2,
+    RIGHT = 3
+}
+
+export enum ENTITY_TYPE_ENUM {
+    PLAYER = 'PLAYER',
+    ENEMY = 'ENEMY',
+    SPIKES = 'SPIKES',
+    BURST = 'BURST',
+    DOOR = 'DOOR',
+    WALL = 'WALL'
+}
