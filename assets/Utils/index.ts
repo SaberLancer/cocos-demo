@@ -20,3 +20,6 @@ const getNumberWithinString = (str: string) => parseInt(str.match(reg)[1] || '0'
 
 export const sortSpriteFrames = (spriteFrames: Array<SpriteFrame>) =>
     spriteFrames.sort((a: any, b: any) => getNumberWithinString(a.name) - getNumberWithinString(b.name))
+
+export const randomByLen = (len: number) =>
+    Array.from({ length: len }).reduce<string>((total, _) => total + Math.floor(Math.random() * 10), '')

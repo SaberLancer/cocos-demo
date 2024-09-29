@@ -1,8 +1,8 @@
 import { AnimationClip } from "cc";
-import { StateMachine } from "../Base/StateMachine";
-import DirectionSubStateMachine from "../Base/DirectionSubStateMachine";
-import { DIRECTION_ENUM } from "../Enums";
-import State from "../Base/State";
+import { StateMachine } from "../../Base/StateMachine";
+import DirectionSubStateMachine from "../../Base/DirectionSubStateMachine";
+import { DIRECTION_ENUM } from "../../Enums";
+import State from "../../Base/State";
 
 export const BASE_URL = 'texture/woodenskeleton/attack/'
 

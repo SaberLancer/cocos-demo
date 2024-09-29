@@ -6,6 +6,7 @@ import EventManager from '../../Runtime/EventManager';
 import { PlayerStateMachine } from './PlayerStateMachine';
 import { EntityManager } from '../../Base/EntityManager';
 import DataManager from '../../Runtime/DataManager';
+import { IENTITY } from '../../Levels';
 const { ccclass, property } = _decorator;
 
 const ANIMATION_SPEED = 1 / 8
@@ -19,16 +20,10 @@ export class PlayerManager extends EntityManager {
 
     isMoving: boolean = false
 
-    async init() {
+    async init(params: IENTITY) {
         this.fsm = this.addComponent(PlayerStateMachine)
         await this.fsm.init()
-        super.init({
-            x: 2,
-            y: 8,
-            type: ENTITY_TYPE_ENUM.PLAYER,
-            direction: DIRECTION_ENUM.TOP,
-            state: ENTITY_STATE_ENUM.IDLE
-        })
+        super.init(params)
         this.TargetX = this.x
         this.TargetY = this.y
 
@@ -65,6 +60,13 @@ export class PlayerManager extends EntityManager {
 
     inputHandler(playerDirection: CONTROLLER_ENUM) {
         if (this.isMoving) return
+        if (this.state === ENTITY_STATE_ENUM.ATTACK) return
+        const id = this.willAttack(playerDirection)
+        if (id) {
+            EventManager.instance.emit(EVENT_ENUM.ATTACK_ENEMY, id)
+            EventManager.instance.emit(EVENT_ENUM.OPEN_DOOR)
+            return
+        }
         if (this.willblock(playerDirection)) {
             return
         }
@@ -114,6 +116,48 @@ export class PlayerManager extends EntityManager {
             EventManager.instance.emit(EVENT_ENUM.PLAYER_MOVE_END)
             this.state = ENTITY_STATE_ENUM.TURNRIGHT
         }
+    }
+
+    willAttack(playerDirection: CONTROLLER_ENUM) {
+        const enemies = DataManager.instance.enemies.filter((enemy) => enemy.state !== ENTITY_STATE_ENUM.DEATH)
+        for (let index = 0; index < enemies.length; index++) {
+            const { x: enemyX, y: enemyY, id: enemyId } = enemies[index]
+            if (
+                playerDirection === CONTROLLER_ENUM.TOP &&
+                this.direction === DIRECTION_ENUM.TOP &&
+                enemyX === this.x &&
+                enemyY === this.y - 2
+            ) {
+                this.state = ENTITY_STATE_ENUM.ATTACK
+                return enemyId
+            } else if (
+                playerDirection === CONTROLLER_ENUM.BOTTOM &&
+                this.direction === DIRECTION_ENUM.BOTTOM &&
+                enemyX === this.x &&
+                enemyY === this.y + 2
+            ) {
+                this.state = ENTITY_STATE_ENUM.ATTACK
+                return enemyId
+            } else if (
+                playerDirection === CONTROLLER_ENUM.LEFT &&
+                this.direction === DIRECTION_ENUM.LEFT &&
+                enemyX === this.x - 2 &&
+                enemyY === this.y
+            ) {
+                this.state = ENTITY_STATE_ENUM.ATTACK
+                return enemyId
+            } else if (
+                playerDirection === CONTROLLER_ENUM.RIGHT &&
+                this.direction === DIRECTION_ENUM.RIGHT &&
+                enemyX === this.x + 2 &&
+                enemyY === this.y
+            ) {
+                this.state = ENTITY_STATE_ENUM.ATTACK
+                return enemyId
+            }
+
+        }
+        return ''
     }
 
     willblock(playerDirection: CONTROLLER_ENUM) {

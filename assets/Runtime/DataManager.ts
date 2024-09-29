@@ -1,8 +1,8 @@
+import { EnemyManager } from "../Base/EnemyManager"
 import Singleton from "../Base/Singleton"
 import { ITile } from "../Levels"
 import { PlayerManager } from "../Scripts/Player/PlayerManager"
 import { TileManager } from "../Scripts/Tile/TileManager"
-import { WoodenSkeletonManager } from "../WoodenSkeleton/WoodenSkeletonManager"
 
 export default class DataManager extends Singleton {
 
@@ -18,7 +18,7 @@ export default class DataManager extends Singleton {
     tileInfo: Array<Array<TileManager>> = []
 
     player: PlayerManager
-    enemies: Array<WoodenSkeletonManager> = []
+    enemies: Array<EnemyManager> = []
 
     reset() {
         this.mapInfo = []
