@@ -26,8 +26,8 @@ export class EnemyManager extends EntityManager {
         EventManager.instance.off(EVENT_ENUM.PLAYER_BORN, this.onChangeDirection)
         EventManager.instance.off(EVENT_ENUM.PLAYER_MOVE_END, this.onChangeDirection)
         EventManager.instance.off(EVENT_ENUM.ATTACK_ENEMY, this.onDeath)
-        let index = DataManager.instance.enemies.indexOf(this)
-        DataManager.instance.enemies.splice(index, 1)
+        // let index = DataManager.instance.enemies.indexOf(this)
+        // DataManager.instance.enemies.splice(index, 1)
     }
 
     onChangeDirection(isInit: boolean) {

@@ -31,6 +31,12 @@ export class PlayerManager extends EntityManager {
         EventManager.instance.on(EVENT_ENUM.ATTACK_PLAYER, this.onDeath, this)
     }
 
+    protected onDestroy(): void {
+        super.onDestroy()
+        EventManager.instance.off(EVENT_ENUM.PLAYER_CTRL, this.inputHandler)
+        EventManager.instance.off(EVENT_ENUM.ATTACK_PLAYER, this.onDeath)
+    }
+
     protected update(dt: number): void {
         this.updateXY()
         super.update(dt)
@@ -101,8 +107,8 @@ export class PlayerManager extends EntityManager {
             } else if (this.direction === DIRECTION_ENUM.RIGHT) {
                 this.direction = DIRECTION_ENUM.TOP
             }
-            EventManager.instance.emit(EVENT_ENUM.PLAYER_MOVE_END)
             this.state = ENTITY_STATE_ENUM.TURNLEFT
+            EventManager.instance.emit(EVENT_ENUM.PLAYER_MOVE_END)
         } else if (playerDirection === CONTROLLER_ENUM.TURNRIGHT) {
             if (this.direction === DIRECTION_ENUM.TOP) {
                 this.direction = DIRECTION_ENUM.RIGHT
@@ -113,8 +119,8 @@ export class PlayerManager extends EntityManager {
             } else if (this.direction === DIRECTION_ENUM.RIGHT) {
                 this.direction = DIRECTION_ENUM.BOTTOM
             }
-            EventManager.instance.emit(EVENT_ENUM.PLAYER_MOVE_END)
             this.state = ENTITY_STATE_ENUM.TURNRIGHT
+            EventManager.instance.emit(EVENT_ENUM.PLAYER_MOVE_END)
         }
     }
 
@@ -162,6 +168,7 @@ export class PlayerManager extends EntityManager {
 
     willblock(playerDirection: CONTROLLER_ENUM) {
         const { TargetX: x, TargetY: y, direction } = this
+        // const { TargetX: x, TargetY: y, direction } = DataManager.instance.player
         const tileInfo = DataManager.instance.tileInfo
         let playerTile
         let weaponTile
@@ -201,7 +208,7 @@ export class PlayerManager extends EntityManager {
             }
 
 
-            if ((playerTile && playerTile.moveable && (!weaponTile || weaponTile.moveable))) {
+            if ((playerTile && playerTile.moveable && (!weaponTile || weaponTile.turnable))) {
 
             } else {
                 this.state = ENTITY_STATE_ENUM.BLOCKFRONT
@@ -241,7 +248,7 @@ export class PlayerManager extends EntityManager {
             }
 
 
-            if ((playerTile && playerTile.moveable && (!weaponTile || weaponTile.moveable))) {
+            if ((playerTile && playerTile.moveable && (!weaponTile || weaponTile.turnable))) {
 
             } else {
                 this.state = ENTITY_STATE_ENUM.BLOCKFRONT
@@ -281,7 +288,7 @@ export class PlayerManager extends EntityManager {
             }
 
 
-            if ((playerTile && playerTile.moveable && (!weaponTile || weaponTile.moveable))) {
+            if ((playerTile && playerTile.moveable && (!weaponTile || weaponTile.turnable))) {
 
             } else {
                 this.state = ENTITY_STATE_ENUM.BLOCKFRONT
@@ -319,13 +326,12 @@ export class PlayerManager extends EntityManager {
                 let playerNextX = x + 1
                 let weaponNextX = x + 2
 
-                playerTile = tileInfo[playerNextX][y]
-                weaponTile = tileInfo[weaponNextX][y]
+                playerTile = tileInfo?.[playerNextX]?.[y]
+                weaponTile = tileInfo?.[weaponNextX]?.[y]
 
             }
 
-
-            if ((playerTile && playerTile.moveable && (!weaponTile || weaponTile.moveable))) {
+            if ((playerTile && playerTile.moveable && (!weaponTile || weaponTile.turnable))) {
 
             } else {
                 this.state = ENTITY_STATE_ENUM.BLOCKFRONT

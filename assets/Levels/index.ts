@@ -12,6 +12,11 @@ export interface IENTITY {
 
 export interface ILevel {
     mapInfo: Array<Array<ITile>>;
+    player: IENTITY;
+    enemies: Array<IENTITY>;
+    // spikes: Array<IENTITY>;
+    bursts: Array<IENTITY>;
+    door: IENTITY;
 }
 
 export interface ITile {

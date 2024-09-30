@@ -1,21 +1,19 @@
 import { _decorator, AnimationClip, Animation } from 'cc';
 import { getInitParamsNumber, getInitParamsTrigger, StateMachine } from '../../Base/StateMachine';
 import { ENTITY_STATE_ENUM, PARAMS_NAME_ENUM } from '../../Enums';
-import IdleSubStateMachine from './IdleSubStateMachine';
-import AttackSubStateMachine from './AttackSubStateMachine';
-import { EntityManager } from '../../Base/EntityManager';
-import DeathSubStateMachine from './DeathSubStateMachine';
+import State from '../../Base/State';
 const { ccclass, property } = _decorator;
 
-@ccclass('WoodenSkeletonStateMachine')
-export class WoodenSkeletonStateMachine extends StateMachine {
+const BASE_URL = 'texture/burst/'
+
+@ccclass('BurstStateMachine')
+export class BurstStateMachine extends StateMachine {
 
     async init() {
         this.animationComponent = this.addComponent(Animation);
 
         this.initParms()
         this.initStateMachine()
-        this.initAnimationEvent()
 
         await Promise.all(this.waitingList)
     }
@@ -28,19 +26,9 @@ export class WoodenSkeletonStateMachine extends StateMachine {
     }
 
     initStateMachine() {
-        this.stateMachine.set(PARAMS_NAME_ENUM.IDLE, new IdleSubStateMachine(this))
-        this.stateMachine.set(PARAMS_NAME_ENUM.ATTACK, new AttackSubStateMachine(this))
-        this.stateMachine.set(PARAMS_NAME_ENUM.DEATH, new DeathSubStateMachine(this))
-    }
-
-    initAnimationEvent() {
-        this.animationComponent.on(Animation.EventType.FINISHED, () => {
-            const name = this.animationComponent.defaultClip.name
-            const whiteList = ['attack']
-            if (whiteList.some(item => name.includes(item))) {
-                this.node.getComponent(EntityManager).state = ENTITY_STATE_ENUM.IDLE
-            }
-        })
+        this.stateMachine.set(PARAMS_NAME_ENUM.IDLE, new State(this, `${BASE_URL}idle`))
+        this.stateMachine.set(PARAMS_NAME_ENUM.ATTACK, new State(this, `${BASE_URL}attack`))
+        this.stateMachine.set(PARAMS_NAME_ENUM.DEATH, new State(this, `${BASE_URL}death`))
     }
 
     run() {

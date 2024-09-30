@@ -4,6 +4,7 @@ import EventManager from '../../Runtime/EventManager';
 import { EntityManager } from '../../Base/EntityManager';
 import DataManager from '../../Runtime/DataManager';
 import { DoorStateMachine } from './DoorStateMachine';
+import { IENTITY } from '../../Levels';
 const { ccclass, property } = _decorator;
 
 const ANIMATION_SPEED = 1 / 8
@@ -11,18 +12,17 @@ const ANIMATION_SPEED = 1 / 8
 @ccclass('DoorManager')
 export class DoorManager extends EntityManager {
 
-    async init() {
+    async init(params: IENTITY) {
         this.fsm = this.addComponent(DoorStateMachine)
         await this.fsm.init()
-        super.init({
-            x: 7,
-            y: 8,
-            type: ENTITY_TYPE_ENUM.DOOR,
-            direction: DIRECTION_ENUM.TOP,
-            state: ENTITY_STATE_ENUM.IDLE
-        })
+        super.init(params)
 
         EventManager.instance.on(EVENT_ENUM.OPEN_DOOR, this.onDeath, this)
+    }
+
+    protected onDestroy(): void {
+        super.onDestroy()
+        EventManager.instance.off(EVENT_ENUM.OPEN_DOOR, this.onDeath)
     }
 
     onDeath() {

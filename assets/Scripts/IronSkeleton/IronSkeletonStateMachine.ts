@@ -19,9 +19,9 @@ export class IronSkeletonStateMachine extends StateMachine {
     }
 
     initParms() {
-        this.params.set(PARAMS_NAME_ENUM.IDLE, getInitParamsTrigger())
         this.params.set(PARAMS_NAME_ENUM.DIRECTION, getInitParamsNumber())
-        this.params.set(PARAMS_NAME_ENUM.DEATH, getInitParamsNumber())
+        this.params.set(PARAMS_NAME_ENUM.IDLE, getInitParamsTrigger())
+        this.params.set(PARAMS_NAME_ENUM.DEATH, getInitParamsTrigger())
     }
 
     initStateMachine() {
