@@ -6,7 +6,7 @@ import EventManager from '../../Runtime/EventManager';
 import { PlayerStateMachine } from './PlayerStateMachine';
 import { EntityManager } from '../../Base/EntityManager';
 import DataManager from '../../Runtime/DataManager';
-import { IENTITY } from '../../Levels';
+import { IEntity } from '../../Levels';
 const { ccclass, property } = _decorator;
 
 const ANIMATION_SPEED = 1 / 8
@@ -20,7 +20,7 @@ export class PlayerManager extends EntityManager {
 
     isMoving: boolean = false
 
-    async init(params: IENTITY) {
+    async init(params: IEntity) {
         this.fsm = this.addComponent(PlayerStateMachine)
         await this.fsm.init()
         super.init(params)
@@ -88,15 +88,19 @@ export class PlayerManager extends EntityManager {
         if (playerDirection === CONTROLLER_ENUM.TOP) {
             this.isMoving = true
             this.TargetY -= 1
+            EventManager.instance.emit(EVENT_ENUM.SHOW_SMOKE, playerDirection)
         } else if (playerDirection === CONTROLLER_ENUM.BOTTOM) {
             this.isMoving = true
             this.TargetY += 1
+            EventManager.instance.emit(EVENT_ENUM.SHOW_SMOKE, playerDirection)
         } else if (playerDirection === CONTROLLER_ENUM.LEFT) {
             this.isMoving = true
             this.TargetX -= 1
+            EventManager.instance.emit(EVENT_ENUM.SHOW_SMOKE, playerDirection)
         } else if (playerDirection === CONTROLLER_ENUM.RIGHT) {
             this.isMoving = true
             this.TargetX += 1
+            EventManager.instance.emit(EVENT_ENUM.SHOW_SMOKE, playerDirection)
         } else if (playerDirection === CONTROLLER_ENUM.TURNLEFT) {
             if (this.direction === DIRECTION_ENUM.TOP) {
                 this.direction = DIRECTION_ENUM.LEFT

@@ -9,11 +9,16 @@ import { sortSpriteFrames } from "../Utils";
  * 2. 要有播放动画的能力animation.play
  */
 
-const ANIMATION_SPEED = 1 / 8
+export const ANIMATION_SPEED = 1 / 8
 
 export default class State {
     animationClip: AnimationClip
-    constructor(private fsm: StateMachine, private path: string = '', private wrapMode: AnimationClip.WrapMode = AnimationClip.WrapMode.Normal) {
+    constructor(
+        private fsm: StateMachine,
+        private path: string = '',
+        private wrapMode: AnimationClip.WrapMode = AnimationClip.WrapMode.Normal,
+        private speed: number = ANIMATION_SPEED
+    ) {
         this.init()
     }
 
@@ -30,13 +35,13 @@ export default class State {
         const track = new animation.ObjectTrack()
         track.path = new animation.TrackPath().toComponent(Sprite).toProperty('spriteFrame')
 
-        const frames: Array<[number, SpriteFrame]> = sortSpriteFrames(spriteFrames).map((item, index) => [ANIMATION_SPEED * index, item])
+        const frames: Array<[number, SpriteFrame]> = sortSpriteFrames(spriteFrames).map((item, index) => [this.speed * index, item])
         track.channel.curve.assignSorted(frames)
 
         this.animationClip.addTrack(track)
         this.animationClip.name = this.path
         this.animationClip.wrapMode = this.wrapMode
-        this.animationClip.duration = frames.length * ANIMATION_SPEED;
+        this.animationClip.duration = frames.length * this.speed;
 
     }
 

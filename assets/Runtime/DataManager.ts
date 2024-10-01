@@ -4,6 +4,7 @@ import { ITile } from "../Levels"
 import { BurstManager } from "../Scripts/Burst/BurstManager"
 import { DoorManager } from "../Scripts/Door/DoorManager"
 import { PlayerManager } from "../Scripts/Player/PlayerManager"
+import { SmokeManager } from "../Scripts/Smoke/SmokeManager"
 import { TileManager } from "../Scripts/Tile/TileManager"
 
 export default class DataManager extends Singleton {
@@ -23,6 +24,7 @@ export default class DataManager extends Singleton {
     enemies: Array<EnemyManager> = []
 
     bursts: Array<BurstManager> = []
+    smokes: Array<SmokeManager> = []
 
     door: DoorManager
 
@@ -33,6 +35,7 @@ export default class DataManager extends Singleton {
         this.tileInfo = []
         this.player = null
         this.enemies = []
+        this.smokes = []
         this.bursts = []
         this.door = null
     }

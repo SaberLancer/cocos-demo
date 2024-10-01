@@ -3,7 +3,7 @@ import { BurstStateMachine } from './BurstStateMachine';
 import { DIRECTION_ENUM, ENTITY_STATE_ENUM, ENTITY_TYPE_ENUM, EVENT_ENUM } from '../../Enums';
 import EventManager from '../../Runtime/EventManager';
 import DataManager from '../../Runtime/DataManager';
-import { IENTITY } from '../../Levels';
+import { IEntity } from '../../Levels';
 import { EntityManager } from '../../Base/EntityManager';
 import { TILE_HEIGHT, TILE_WIDTH } from '../Tile/TileManager';
 
@@ -13,7 +13,7 @@ const { ccclass, property } = _decorator;
 @ccclass('BurstManager')
 export class BurstManager extends EntityManager {
 
-    async init(params: IENTITY) {
+    async init(params: IEntity) {
         this.fsm = this.addComponent(BurstStateMachine)
         await this.fsm.init()
         super.init(params)

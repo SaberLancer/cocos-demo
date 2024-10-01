@@ -1,5 +1,5 @@
 import { TILE_TYPE_ENUM, DIRECTION_ENUM, ENTITY_TYPE_ENUM, ENTITY_STATE_ENUM } from '../Enums';
-import { IENTITY, ILevel, ITile } from './index';
+import { IEntity, ILevel, ITile } from './index';
 
 const mapInfo: ITile[][] = [
     [
@@ -184,7 +184,7 @@ const mapInfo: ITile[][] = [
     ],
 ];
 
-const player: IENTITY = {
+const player: IEntity = {
     x: 2,
     y: 0,
     direction: DIRECTION_ENUM.BOTTOM,
@@ -192,7 +192,7 @@ const player: IENTITY = {
     type: ENTITY_TYPE_ENUM.PLAYER,
 };
 
-const enemies: Array<IENTITY> = [
+const enemies: Array<IEntity> = [
     {
         x: 3,
         y: 2,
@@ -211,9 +211,9 @@ const enemies: Array<IENTITY> = [
 
 // const spikes: Array<ISpikes> = [];
 
-const bursts: Array<IENTITY> = [];
+const bursts: Array<IEntity> = [];
 
-const door: IENTITY = {
+const door: IEntity = {
     x: 5,
     y: 3,
     direction: DIRECTION_ENUM.LEFT,

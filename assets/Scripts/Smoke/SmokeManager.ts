@@ -3,17 +3,17 @@ import { CONTROLLER_ENUM, DIRECTION_ENUM, DIRECTION_ORIGIN_ENUM, ENTITY_STATE_EN
 import EventManager from '../../Runtime/EventManager';
 import { EntityManager } from '../../Base/EntityManager';
 import DataManager from '../../Runtime/DataManager';
-import { DoorStateMachine } from './DoorStateMachine';
+import { SmokeStateMachine } from './SmokeStateMachine';
 import { IEntity } from '../../Levels';
 const { ccclass, property } = _decorator;
 
 const ANIMATION_SPEED = 1 / 8
 
-@ccclass('DoorManager')
-export class DoorManager extends EntityManager {
+@ccclass('SmokeManager')
+export class SmokeManager extends EntityManager {
 
     async init(params: IEntity) {
-        this.fsm = this.addComponent(DoorStateMachine)
+        this.fsm = this.addComponent(SmokeStateMachine)
         await this.fsm.init()
         super.init(params)
 

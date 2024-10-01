@@ -4,7 +4,7 @@ import { DIRECTION_ENUM, ENTITY_STATE_ENUM, ENTITY_TYPE_ENUM, EVENT_ENUM } from 
 import EventManager from '../../Runtime/EventManager';
 import DataManager from '../../Runtime/DataManager';
 import { EnemyManager } from '../../Base/EnemyManager';
-import { IENTITY } from '../../Levels';
+import { IEntity } from '../../Levels';
 
 
 const { ccclass, property } = _decorator;
@@ -12,7 +12,7 @@ const { ccclass, property } = _decorator;
 @ccclass('WoodenSkeletonManager')
 export class WoodenSkeletonManager extends EnemyManager {
 
-    async init(params: IENTITY) {
+    async init(params: IEntity) {
         this.fsm = this.addComponent(WoodenSkeletonStateMachine)
         await this.fsm.init()
         super.init(params)

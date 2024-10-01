@@ -4,7 +4,7 @@ import ResourceManager from '../Runtime/ResourceManager';
 import { CONTROLLER_ENUM, DIRECTION_ENUM, DIRECTION_ORIGIN_ENUM, ENTITY_STATE_ENUM, ENTITY_TYPE_ENUM, EVENT_ENUM, PARAMS_NAME_ENUM } from '../Enums';
 import EventManager from '../Runtime/EventManager';
 import { PlayerStateMachine } from '../Scripts/Player/PlayerStateMachine';
-import { IENTITY } from '../Levels';
+import { IEntity } from '../Levels';
 import { StateMachine } from './StateMachine';
 import { randomByLen } from '../Utils';
 const { ccclass, property } = _decorator;
@@ -39,7 +39,7 @@ export class EntityManager extends Component {
         this.fsm.setParamsValue(value, true)
     }
 
-    async init(params: IENTITY) {
+    async init(params: IEntity) {
         const sprite = this.addComponent(Sprite);
         sprite.sizeMode = Sprite.SizeMode.CUSTOM;
 
