@@ -10,7 +10,7 @@ enum FADE_STATE_ENUM {
     IDLE
 }
 
-export const DEFAULT_DURATION = 2000
+export const DEFAULT_DURATION = 200
 
 @ccclass('DrawManager')
 export class DrawManager extends Component {

@@ -19,7 +19,11 @@ export enum EVENT_ENUM {
     ATTACK_PLAYER = 'ATTACK_PLAYER',
     ATTACK_ENEMY = 'ATTACK_ENEMY',
     OPEN_DOOR = 'OPEN_DOOR',
-    SHOW_SMOKE = 'SHOW_SMOKE'
+    SHOW_SMOKE = 'SHOW_SMOKE',
+    RECORD_STEP = 'RECORD_STEP',
+    REVOKE_STEP = 'REVOKE_STEP',
+    RESET_LEVEL = 'RESET_LEVEL',
+    OUT_BATTLE = 'OUT_BATTLE',
 }
 
 export enum CONTROLLER_ENUM {
@@ -86,4 +90,10 @@ export enum ENTITY_TYPE_ENUM {
     SPIKES_TWO = 'SPIKES_TWO',
     SPIKES_THREE = 'SPIKES_THREE',
     SPIKES_FOUR = 'SPIKES_FOUR'
+}
+
+export enum SCENE_ENUM {
+    Start = 'Start',
+    Battle = 'Battle',
+    Loading = 'Loading'
 }

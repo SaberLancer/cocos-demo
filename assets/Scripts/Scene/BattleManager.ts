@@ -1,11 +1,11 @@
-import { _decorator, Component, Node } from 'cc';
+import { _decorator, Component, director, Node } from 'cc';
 import { TileMapManager } from '../Tile/TileMapManager';
 import { createUINode } from '../../Utils';
 import Levels, { ILevel } from '../../Levels';
 import DataManager from '../../Runtime/DataManager';
 import { TILE_HEIGHT, TILE_WIDTH } from '../Tile/TileManager';
 import EventManager from '../../Runtime/EventManager';
-import { CONTROLLER_ENUM, DIRECTION_ENUM, ENTITY_STATE_ENUM, ENTITY_TYPE_ENUM, EVENT_ENUM } from '../../Enums';
+import { CONTROLLER_ENUM, DIRECTION_ENUM, ENTITY_STATE_ENUM, ENTITY_TYPE_ENUM, EVENT_ENUM, SCENE_ENUM } from '../../Enums';
 import { PlayerManager } from '../Player/PlayerManager';
 import { WoodenSkeletonManager } from '../WoodenSkeleton/WoodenSkeletonManager';
 import { DoorManager } from '../Door/DoorManager';
@@ -20,19 +20,27 @@ export class BattleManager extends Component {
     level: ILevel
     stage: Node
     private smokeLayer: Node
+    private inited: boolean = false
 
     onLoad() {
         // DataManager.instance.levelIndex = 2
         EventManager.instance.on(EVENT_ENUM.NEXT_LEVEL, this.nextLevel, this)
         EventManager.instance.on(EVENT_ENUM.PLAYER_MOVE_END, this.checkArrived, this)
-        EventManager.instance.on(EVENT_ENUM.SHOW_SMOKE, this.generateSmoke, this)
+        // EventManager.instance.on(EVENT_ENUM.SHOW_SMOKE, this.generateSmoke, this)
+        EventManager.instance.on(EVENT_ENUM.RECORD_STEP, this.record, this)
+        EventManager.instance.on(EVENT_ENUM.REVOKE_STEP, this.revoke, this)
+        EventManager.instance.on(EVENT_ENUM.RESET_LEVEL, this.initLevel, this)
+        EventManager.instance.on(EVENT_ENUM.OUT_BATTLE, this.outBattle, this)
     }
 
     onDestroy() {
-        super.onDestroy()
         EventManager.instance.off(EVENT_ENUM.NEXT_LEVEL, this.nextLevel)
         EventManager.instance.off(EVENT_ENUM.PLAYER_MOVE_END, this.checkArrived)
         EventManager.instance.off(EVENT_ENUM.SHOW_SMOKE, this.generateSmoke)
+        EventManager.instance.off(EVENT_ENUM.RECORD_STEP, this.record)
+        EventManager.instance.off(EVENT_ENUM.REVOKE_STEP, this.revoke)
+        EventManager.instance.off(EVENT_ENUM.RESET_LEVEL, this.initLevel)
+        EventManager.instance.off(EVENT_ENUM.OUT_BATTLE, this.outBattle)
     }
 
     start() {
@@ -44,7 +52,9 @@ export class BattleManager extends Component {
         const level = Levels[`level${DataManager.instance.levelIndex}`]
 
         if (level) {
-            await FadeManager.instance.fadeIn()
+            if (this.inited) {
+                await FadeManager.instance.fadeIn()
+            }
             this.clearLevel()
 
             this.level = level
@@ -63,7 +73,13 @@ export class BattleManager extends Component {
             ])
 
             await FadeManager.instance.fadeOut()
+            this.inited = true
         }
+    }
+
+    async outBattle() {
+        await FadeManager.instance.fadeIn(300)
+        director.loadScene(SCENE_ENUM.Start)
     }
 
     nextLevel() {
@@ -188,6 +204,84 @@ export class BattleManager extends Component {
         const disY = mapRowCount * TILE_HEIGHT / 2 + 80
 
         this.stage.setPosition(-disX, disY)
+    }
+
+    record() {
+        const { x: playerX, y: playerY, state: playerState, direction: playerDirection, type: playerType } = DataManager.instance.player
+        const { x: doorX, y: doorY, state: doorState, direction: doorDirection, type: doorType } = DataManager.instance.door
+
+        const item = {
+            player: {
+                x: playerX,
+                y: playerY,
+                state: playerState === ENTITY_STATE_ENUM.IDLE ||
+                    playerState === ENTITY_STATE_ENUM.DEATH ||
+                    playerState === ENTITY_STATE_ENUM.AIRDEATH ? playerState : ENTITY_STATE_ENUM.IDLE,
+                direction: playerDirection,
+                type: playerType
+            },
+            door: {
+                x: doorX,
+                y: doorY,
+                state: doorState,
+                direction: doorDirection,
+                type: doorType
+            },
+            enemies: DataManager.instance.enemies.map((enemy) => {
+                return {
+                    x: enemy.x,
+                    y: enemy.y,
+                    state: enemy.state,
+                    direction: enemy.direction,
+                    type: enemy.type
+                }
+            }),
+            bursts: DataManager.instance.bursts.map((burst) => {
+                return {
+                    x: burst.x,
+                    y: burst.y,
+                    state: burst.state,
+                    direction: burst.direction,
+                    type: burst.type
+                }
+            })
+        }
+
+        DataManager.instance.records.push(item)
+    }
+
+    revoke() {
+        const item = DataManager.instance.records.pop()
+
+        DataManager.instance.player.x = DataManager.instance.player.TargetX = item.player.x
+        DataManager.instance.player.y = DataManager.instance.player.TargetY = item.player.y
+        DataManager.instance.player.state = item.player.state
+        DataManager.instance.player.direction = item.player.direction
+        DataManager.instance.player.type = item.player.type
+
+        DataManager.instance.door.x = item.door.x
+        DataManager.instance.door.y = item.door.y
+        DataManager.instance.door.state = item.door.state
+        DataManager.instance.door.direction = item.door.direction
+        DataManager.instance.door.type = item.door.type
+
+        for (let index = 0; index < item.enemies.length; index++) {
+            const enemy = item.enemies[index];
+            DataManager.instance.enemies[index].x = enemy.x
+            DataManager.instance.enemies[index].y = enemy.y
+            DataManager.instance.enemies[index].state = enemy.state
+            DataManager.instance.enemies[index].direction = enemy.direction
+            DataManager.instance.enemies[index].type = enemy.type
+        }
+
+        for (let index = 0; index < item.bursts.length; index++) {
+            const burst = item.bursts[index];
+            DataManager.instance.bursts[index].x = burst.x
+            DataManager.instance.bursts[index].y = burst.y
+            DataManager.instance.bursts[index].state = burst.state
+            DataManager.instance.bursts[index].direction = burst.direction
+            DataManager.instance.bursts[index].type = burst.type
+        }
     }
 }
 
